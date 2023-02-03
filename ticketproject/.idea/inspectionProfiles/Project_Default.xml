@@ -1,0 +1,16 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="appointment.appointment.urls.doctor" />
+          <option value="doctor.views" />
+          <option value="ticketingtoolproject.ticketingtoolapp.apis.views.ticketingtoolapp" />
+          <option value="ticketingtoolproject.ticketingtoolproject.urls.ticketingtoolapp" />
+          <option value="ticketingtoolproject.ticketingtoolproject.ticketingtoolapp" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

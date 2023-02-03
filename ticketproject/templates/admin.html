@@ -1,0 +1,59 @@
+{% include 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ADMIN</title>
+    <style>
+      table, th, td ,tr{
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+    </style>
+</head>
+<body>
+  <h1>Welcome {{user}}</h1>
+  <div>
+  <h3>Ticket Information</h3>
+<table>
+<tr align="center">
+
+  <!-- <th>ID</th> -->
+  <th>Ticket no</th>
+  <th>User</th>
+  <th>Subject</th>
+  <th>Severity</th>
+  <th>Type</th>
+  <th>Report To</th>
+  <th>time</th>
+  <th>Remarks</th>
+  <th>Accept</th>
+  <th>Status</th>
+  <th>Admin Comment</th>
+    <th>Manager Comment</th>
+<th>Add comment</th>
+</tr></thead>
+{% for i in ticket %}
+<tr align="center">
+  <td>{{i.ticket_no}}</td>
+  <td>{{i.user}}</td>
+  <td>{{i.Subject}}</td>
+  <td>{{i.Severity}}</td>
+  <td>{{i.Type}}</td>
+  <td>{{i.Report_To}}</td>
+  <td>{{i.request_raised_at}}</td>
+  
+  <td>{{i.Remarks}}</td>
+  <td><a href="complete/5/{{i.id}}">complete</a>
+     <td>{{i.Status}}</td>
+     <td>{{i.Admin_comment}}</td>
+    <td>{{i.Mgr_comment}}</td>
+      <td><a href='comment/5/{{i.id}}'>Add Comment</a></td>
+</tr>
+{% endfor %} 
+</table>
+</center>
+</table>
+  </div>
+</body>
+   

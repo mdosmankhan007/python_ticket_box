@@ -1,0 +1,70 @@
+{% include  'base.html' %}
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+    <style>
+        .bg-container {
+            display:flex;
+            flex-direction:column ;
+            justify-content: center;
+            align-items: center;
+            background-image: url("https://www.shutterstock.com/image-vector/global-internet-network-security-digital-260nw-604575887.jpg");
+            background-size: 100%;
+            background-repeat: no-repeat;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .tool {
+            display:flex;
+            flex-direction:column ;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            width: 400px;
+            background-color: aqua;
+            border-radius: 20px;
+
+        }
+        .head{
+            color: black;
+            font-family: Roboto;
+            font-weight: 900;
+            text-align: center;
+        }
+    </style>
+
+    <meta charset="UTF-8">
+
+    <title>Signup AS</title>
+
+</head>
+<div class="bg-container">
+<div class="tool">
+    <h1 class="head">Signup page</h1>
+<form action="" method="POST">
+
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_error %}
+    <p class="error">{{error}}</p>
+    {% endfor %} 
+    {% endif %}
+    {% for fm in form %}
+    {{fm.label_tag }}
+    {{fm}}
+    {{fm.errors|striptags}}
+    <br>
+    <br>
+    {% endfor %}
+    <input type="submit" value="submit">
+</tool>
+</form>
+</div>
+
+</body>
+
+</html>

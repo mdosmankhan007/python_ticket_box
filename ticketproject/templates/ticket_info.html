@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table, th, td ,tr{
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <thead>
+    
+        <center>
+            <h3>Ticket Information</h3>
+        <table>
+        <tr align="center">
+            <th>Subject</th>
+            <th>Severity</th>
+            <th>Type</th>
+            <th>Report_To</th>
+            <th>time</th>
+            <th>Remarks</th>
+            <th>Status</th>
+            <th>Admin Comment</th>
+            <th>Manager Comment</th>
+        </tr></thead>
+   
+        <tr align="center">        
+            <td>{{b.Subject}}</td>
+            <td>{{b.Severity}}</td>
+            <td>{{b.Type}}</td>
+            <td>{{b.Report_To}}</td>
+            <td>{{b.request_raised_at}}</td>
+            <td>{{b.Remarks}}</td>
+            <td>{{b.Status}}</td>
+            <td>{{b.Admin_comment}}</td>
+            <td>{{b.Mgr_comment}}</td>
+        </tr>
+         
+</table><br/>
+            <br/>
+<a href="{% url 'employee' %}">Back</a>
+
+</center>
+</body>
+</html>

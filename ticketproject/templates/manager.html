@@ -1,0 +1,81 @@
+{% include 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .ram {
+            background-color: aqua;
+            display:flex;
+            flex-direction: column;
+            height:100vh;
+            font-size: 24px;
+            color:black;
+        }
+        .table {
+            background-color: yellowgreen;
+        }
+     
+        table, th, td ,tr{
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+    </style>
+
+    
+    <meta charset="UTF-8">
+    <title>manager</title>
+</head>
+<body>
+    <div class="ram">
+
+ <h1>Welcome {{user}}</h1>
+ 
+
+
+ <center>
+    <h3>Ticket Information</h3>
+<table>
+<tr align="center">
+  
+    <!-- <th>ID</th> -->
+    <th>Ticket Number</th>
+    <th>User</th>
+    <th>Subject</th>
+    <th>Severity</th>
+    <th>Type</th>
+    <th>Report To</th>
+    <th>time</th>
+    <th>Remarks</th>
+    <th>Accept</th>
+    <th>Status</th>
+    <th>Admin comment</th>
+    <th>Manager Comment</th>
+    <th>Add comment</th>
+
+</tr></thead>
+{% for i in obj %}
+    {% if i.Report_To == 'OILC_Manager' %}
+<tr align="center">
+    <td>{{i.ticket_no}}</td>
+    <td>{{i.user}}</td>
+    <td>{{i.Subject}}</td>
+    <td>{{i.Severity}}</td>
+    <td>{{i.Type}}</td>
+    <td>{{i.Report_To}}</td>
+    <td>{{i.request_raised_at}}</td>
+    
+    <td>{{i.Remarks}}</td>
+    <td><a href="accept/5/{{i.id}}">accept</a>
+        <a href="reject/5/{{i.id}}">reject</a></td>
+       <td>{{i.Status}}</td>
+       <td>{{i.Admin_comment}}</td>
+    <td>{{i.Mgr_comment}}</td>
+     <td><a href='Mcomment/5/{{i.id}}'>Add Comment</a></td>
+</tr>
+{% endif %}
+{% endfor %} 
+</table>
+</center>
+</body>
+</html>
