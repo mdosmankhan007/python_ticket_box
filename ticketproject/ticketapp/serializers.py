@@ -44,6 +44,7 @@ class UserSerializer(serializers.ModelSerializer):
                     user.save()
             elif role.role == 'Deployed_Manager':
                     user.is_superuser = True
+                    user.save()
             else:
                     user.save()
             print('outside..............')
@@ -250,15 +251,20 @@ class TicketSerializer(serializers.ModelSerializer):
     Type = serializers.CharField(source='Type.type', read_only=True)
     Status = serializers.CharField(source='Status.status', read_only=True)
     ticket_no = serializers.CharField(required=False)
-
+    
+    
     class Meta:
         model = TicketAPI
-        fields = ['ticket_no', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
+        fields = [ 'ticket_no', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
                    'Mgr_comment', 'request_raised_at']
+        
 
 
     def create(self, validated_data):
         request = self.context.get('request')
+        ticket_no = "OJ-"+uuid.uuid4().hex[:6]
+        validated_data['ticket_no'] = ticket_no
+        
         Severity = request.data.get('Severity')
         Severity = SeverityAPI.objects.get(severity=Severity)
         validated_data['Severity'] = Severity

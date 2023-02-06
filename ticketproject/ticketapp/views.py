@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import *
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 # Create your views here.
 
 
@@ -44,7 +46,7 @@ class LoginAPI(viewsets.ModelViewSet):
                         'is_superuser': user.is_superuser,
                         'is_staff': user.is_staff,
                         'role': user1.role.role,
-                        'message': 'login successful admin'
+                        'message': f'login successful {username}'
                     })
             else:
                 raise AuthenticationFailed('password not match')
@@ -85,8 +87,7 @@ class ManagersAPI(viewsets.ModelViewSet):
     serializer_class=ManagerAPISerializer
     queryset=ManagerAPI.objects.all()
 
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+
 
 class TicketsAPI(viewsets.ModelViewSet):
     serializer_class=TicketSerializer
@@ -94,6 +95,8 @@ class TicketsAPI(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication]
     permission_classes = [AllowAny]
 
+    
+        
     def get_permissions(self):
         if self.request.method == 'PATCH':
             self.permission_classes = [IsAdminUser]
