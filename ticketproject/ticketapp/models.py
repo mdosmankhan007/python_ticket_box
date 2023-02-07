@@ -79,6 +79,7 @@ class ManagerAPI(models.Model):
 
 class TicketAPI(models.Model):
     ticket_no=models.CharField(max_length=20,unique=True)
+    user=models.CharField(max_length=30,default="")
     Subject=models.CharField(max_length=100)
     Severity=models.ForeignKey(SeverityAPI,on_delete=models.CASCADE)
     Type=models.ForeignKey(TypeAPI,on_delete=models.CASCADE)

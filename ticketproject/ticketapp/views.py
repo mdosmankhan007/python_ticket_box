@@ -94,8 +94,9 @@ class TicketsAPI(viewsets.ModelViewSet):
     queryset=TicketAPI.objects.all()
     authentication_classes = [SessionAuthentication]
     permission_classes = [AllowAny]
-
-    
+    # user = User.objects.get(username=username)
+    # user1 = UsersAPI.objects.filter(username=username).first()
+    # print(user1)
         
     def get_permissions(self):
         if self.request.method == 'PATCH':

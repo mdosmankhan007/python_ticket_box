@@ -251,17 +251,19 @@ class TicketSerializer(serializers.ModelSerializer):
     Type = serializers.CharField(source='Type.type', read_only=True)
     Status = serializers.CharField(source='Status.status', read_only=True)
     ticket_no = serializers.CharField(required=False)
-    
+    user=serializers.CharField()
     
     class Meta:
         model = TicketAPI
-        fields = [ 'ticket_no', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
+        fields = [ 'ticket_no','user', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
                    'Mgr_comment', 'request_raised_at']
         
 
 
     def create(self, validated_data):
         request = self.context.get('request')
+        user=request.user
+        validated_data['user']=user
         ticket_no = "OJ-"+uuid.uuid4().hex[:6]
         validated_data['ticket_no'] = ticket_no
         
@@ -282,14 +284,16 @@ class TicketSerializer(serializers.ModelSerializer):
         instance.Report_To = Report_To
         instance.Type = Type
         instance.save()
-
+        print(instance)
         return instance
     def update(self, instance, validated_data):
         request = self.context.get('request')
-        user = request.user
+        instance.user=request.data.get('user', instance.user)
         if user.is_staff:
             instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
         elif user.is_superuser:
+            instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
+        elif user.is_superuser and user.is_staff:
             instance.Admin_comment = request.data.get('Admin_comment', instance.Admin_comment)
         status = request.data.get('Status', instance.Status.status)
         instance.Status = StatusAPI.objects.get(status=status)
