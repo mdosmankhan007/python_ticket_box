@@ -3,6 +3,8 @@ from .models import *
 from django.contrib.auth.models import User
 import uuid
 import datetime
+from django.views.decorators.csrf import csrf_exempt
+
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.CharField()
     class Meta:
@@ -39,12 +41,12 @@ class UserSerializer(serializers.ModelSerializer):
                 user.is_staff=True
                 user.save()
                 print(user.is_superuser)
-            elif role.role == 'OILC_Manager':
+            elif role.role == 'manager':
                     user.is_staff=True
                     user.save()
-            elif role.role == 'Deployed_Manager':
-                    user.is_superuser = True
-                    user.save()
+            # elif role.role == 'Deployed_Manager':
+            #         user.is_superuser = True
+            #         user.save()
             else:
                     user.save()
             print('outside..............')
@@ -56,6 +58,7 @@ class UserSerializer1(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'password')
+       
 
 
 class RoleAPISerializer(serializers.ModelSerializer):
@@ -85,120 +88,6 @@ class ManagerAPISerializer(serializers.ModelSerializer):
         model = ManagerAPI
         fields = ['id', 'manager']
 
-# class TicketSerializer(serializers.ModelSerializer):
-#     Severity = serializers.PrimaryKeyRelatedField(queryset=SeverityAPI.objects.all())
-#     Type = serializers.PrimaryKeyRelatedField(queryset=TypeAPI.objects.all())
-#     Report_To = serializers.PrimaryKeyRelatedField(queryset=ManagerAPI.objects.all())
-#     Status = serializers.PrimaryKeyRelatedField(queryset=StatusAPI.objects.all())
-#
-# #     Severity = serializers.CharField(source='Severity.severity', read_only=True)
-# #     Report_To = serializers.CharField(source='Report_To.manager', read_only=True)
-# #     Type = serializers.CharField(source='Type.type', read_only=True)
-# #     Status = serializers.CharField(source='Status.status', read_only=True)
-# #     ticket_no = serializers.CharField(required=False)
-# #
-# #     class Meta:
-# #         model = TicketAPI
-# #         fields = ['ticket_no', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
-# #                    'Mgr_comment', 'request_raised_at']
-# #     def create(self, validated_data):
-# #         print("--------------------------------------------------")
-# #         print(validated_data,'------------')
-# #         ticket_no = "OJ" + uuid.uuid4().hex[:6]
-# #         validated_data['ticket_no'] = ticket_no
-# #
-# #         severity = validated_data.get('Severity', None)
-# #         report_to = validated_data.get('Report_To', None)
-# #         ticket_type = validated_data.get('Type', None)
-# #         status = validated_data.get('Status', None)
-# #         # if severity is None or report_to is None or ticket_type is None or status is None:
-# #         #     raise serializers.ValidationError("Required fields (Severity, Report_To, Type, Status) are missing")
-# #
-# #         severity_obj = SeverityAPI.objects.get(severity=severity)
-# #         report_to_obj = ManagerAPI.objects.get(manager=report_to)
-# #         type_obj = TypeAPI.objects.get(type=ticket_type)
-# #         status_obj = StatusAPI.objects.get(status=status)
-# #         print(severity_obj,'severity_obj')
-# #
-# #         validated_data['Severity'] = severity_obj
-# #         validated_data['Report_To'] = report_to_obj
-# #         validated_data['Type'] = type_obj
-# #         validated_data['Status'] = status_obj
-# #
-# #         return super().create(validated_data)
-# #
-# #     def update(self, instance, validated_data):
-# #
-# #         request = self.context.get('request')
-# #         user = request.user
-# #         print(user, 'user...........')
-# #         request = self.context.get('request')
-# #         print(request)
-# #         status = request.data['Status']
-# #         Report_To = request.data['Report_To']
-# #         Severity=request.data['Severity']
-# #         Type=request.data['Type']
-# #         status = StatusAPI.objects.get(status=status)
-# #         if user.is_staff:
-# #             Mgr_comment=request.data['Mgr_comment']
-# #             instance.Mgr_comment = Mgr_comment
-# #         elif user.is_superuser:
-# #             Admin_comment=request.data['Admin_comment']
-# #             instance.Admin_comment = Admin_comment
-# #         instance.Status = status
-# #         # instance.Report_To = Report_To
-# #         instance.Severity = Severity
-# #         instance.Type = Type
-# #         instance.save()
-# #         return instance
-#
-#
-#     class Meta:
-#         model = TicketAPI
-#         fields = ['ticket_no', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
-#                    'Mgr_comment', 'request_raised_at']
-#
-#     # def create(self, validated_data):
-#     #     ticket_no = "OJ" + uuid.uuid4().hex[:6]
-#     #     validated_data['ticket_no'] = ticket_no
-#     #     severity = SeverityAPI.objects.get(severity=self.context.get('severity'))
-#     #     validated_data['Severity'] = severity
-#     #     type = TypeAPI.objects.get(type=self.context.get('type'))
-#     #     validated_data['Type'] = type
-#     #     report_to = ManagerAPI.objects.get(manager=self.context.get('report_to'))
-#     #     validated_data['Report_To'] = report_to
-#     #     status = StatusAPI.objects.get(status=self.context.get('status'))
-#     #     validated_data['Status'] = status
-#
-#         # return super().create(validated_data)
-#
-#
-#     def create(self, validated_data):
-#         Severity_id = validated_data.pop('Severity')
-#         Type_id = validated_data.pop('Type')
-#         Report_To_id = validated_data.pop('Report_To')
-#         ticket = TicketAPI.objects.create(
-#             Severity=SeverityAPI.objects.get(id=Severity_id),
-#             Type=TypeAPI.objects.get(id=Type_id),
-#             Report_To=ManagerAPI.objects.get(id=Report_To_id),
-#             **validated_data
-#         )
-#         return ticket
-#
-#     def update(self, instance, validated_data):
-#         request = self.context.get('request')
-#         user = request.user
-#
-#         if user.is_staff:
-#             instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
-#         elif user.is_superuser:
-#             instance.Admin_comment = request.data.get('Admin_comment', instance.Admin_comment)
-#
-#         status = request.data.get('Status', instance.Status.status)
-#         instance.Status = StatusAPI.objects.get(status=status)
-#         instance.save()
-#
-#         return instance
 
 
 # class TicketSerializer(serializers.ModelSerializer):
@@ -207,63 +96,216 @@ class ManagerAPISerializer(serializers.ModelSerializer):
 #     Type = serializers.CharField(source='Type.type', read_only=True)
 #     Status = serializers.CharField(source='Status.status', read_only=True)
 #     ticket_no = serializers.CharField(required=False)
-#
+#     user = serializers.CharField()
 #     class Meta:
 #         model = TicketAPI
-#         fields = ['ticket_no', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
-#                   'Mgr_comment', 'request_raised_at']
-#
+        
+#         fields = [ 'ticket_no','user', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
+#                    'Mgr_comment', 'request_raised_at']
+    
+    
+    # def create(self, validated_data):
+    #     request = self.context.get('request')
+    #     ticket_no = "OJ-"+uuid.uuid4().hex[:6]
+    #     validated_data['ticket_no'] = ticket_no
+        
+    #     Severity = request.data.get('Severity')
+    #     Severity = SeverityAPI.objects.get(severity=Severity)
+    #     validated_data['Severity'] = Severity
+
+    #     Report_To = request.data.get('Report_To')
+    #     Report_To = ManagerAPI.objects.get(manager=Report_To)
+    #     validated_data['Report_To'] = Report_To
+
+    #     Type = request.data.get('Type')
+    #     Type = TypeAPI.objects.get(type=Type)
+    #     validated_data['Type'] = Type
+        
+    #     user=request.user.username
+        
+    #     validated_data['user']=user
+        
+        
+    #     instance = self.Meta.model(**validated_data)
+    #     instance.user=user
+    #     instance.Severity = Severity
+    #     instance.Report_To = Report_To
+    #     instance.Type = Type
+    #     print(instance)
+    #     instance.save()
+        
+    #     print(validated_data)
+    #     return instance
+    
+    
+    # def update(self, instance, validated_data):
+    #     request = self.context.get('request')
+    #     print(request,'requestttttttttttttttt')
+    #     # user = User.objects.get(username=instance.user)
+    #     instance.user=request.data.get('user', instance.user)
+    #     print(instance.user,"------------------")
+    #     if user.is_staff:
+    #         instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
+    #     elif user.is_superuser:
+    #         instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
+    #     elif user.is_superuser and user.is_staff:
+    #         instance.Admin_comment = request.data.get('Admin_comment', instance.Admin_comment)
+    #     status = request.data.get('Status', instance.Status.status)
+    #     instance.Status = StatusAPI.objects.get(status=status)
+    #     instance.save()
+    #     return instance
+
+
+# class TicketSerializer(serializers.ModelSerializer):
+#     Severity = serializers.CharField(source='Severity.severity', read_only=True)
+#     Report_To = serializers.CharField(source='Report_To.manager', read_only=True)
+#     Type = serializers.CharField(source='Type.type', read_only=True)
+#     Status = serializers.CharField(source='Status.status', read_only=True)
+#     ticket_no = serializers.CharField(required=False)
+#     user=serializers.CharField()
+    
+#     class Meta:
+#         model = TicketAPI
+#         fields = [ 'ticket_no','user', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
+#                    'Mgr_comment', 'request_raised_at']
+        
+
+
 #     def create(self, validated_data):
-#         Severity_name = validated_data.pop('Severity')
-#         Type_id = validated_data.pop('Type')
-#         Report_To_id = validated_data.pop('Report_To')
-#         Status_name = validated_data.pop('Status')
-#
-#         severity = SeverityAPI.objects.get(name=Severity_name)
-#         status = StatusAPI.objects.get(status=Status_name)
-#
-#         ticket = TicketAPI.objects.create(
-#             Severity=severity,
-#             Type=TypeAPI.objects.get(id=Type_id),
-#             Report_To=ManagerAPI.objects.get(id=Report_To_id),
-#             Status=status,
-#             **validated_data
-#         )
-#         return ticket
-#
-#     def update(self, instance, validated_data):
 #         request = self.context.get('request')
-#         user = request.user
-#         if user.is_staff:
-#             instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
-#         elif user.is_superuser:
-#             instance.Admin_comment = request.data.get('Admin_comment', instance.Admin_comment)
+#         user=request.user
+#         validated_data['user']=user
+#         ticket_no = "OJ-"+uuid.uuid4().hex[:6]
+#         validated_data['ticket_no'] = ticket_no
+        
+#         Severity = request.data.get('Severity')
+#         Severity = SeverityAPI.objects.get(severity=Severity)
+#         validated_data['Severity'] = Severity
+
+#         Report_To = request.data.get('Report_To')
+#         Report_To = ManagerAPI.objects.get(manager=Report_To)
+#         validated_data['Report_To'] = Report_To
+
+#         Type = request.data.get('Type')
+#         Type = TypeAPI.objects.get(type=Type)
+#         validated_data['Type'] = Type
+
+#         instance = self.Meta.model(**validated_data)
+#         instance.Severity = Severity
+#         instance.Report_To = Report_To
+#         instance.Type = Type
+#         instance.save()
+#         print(instance)
+#         return instance
+    
+    # def update(self, instance, validated_data):
+    #     print(validated_data['Admin_comment'], 'validateddataaa')
+    #     request = self.context.get('request')
+    #     instance.user=request.data.get('user', instance.user)
+    #     print(instance.user, 'ins jgjg')
+    #     if request.user.is_staff:
+    #         instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
+    #     elif request.user.is_superuser:
+    #         instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
+    #     elif request.user.is_superuser and request.user.is_staff:
+    #         instance.Admin_comment = validated_data['Admin_comment']
+    #     status = request.data.get('Status', instance.Status.status)
+    #     instance.Status = StatusAPI.objects.get(status=status)
+    #     instance.save()
+    #     return instance
+
+
+
+# class TicketSerializer(serializers.ModelSerializer):
+#     Severity = serializers.CharField(source='Severity.severity', read_only=True)
+#     Report_To = serializers.CharField(source='Report_To.manager', read_only=True)
+#     Type = serializers.CharField(source='Type.type', read_only=True)
+#     Status = serializers.CharField(source='Status.status', read_only=True)
+#     ticket_no = serializers.CharField(required=False)
+    
+    
+#     class Meta:
+#         model = TicketAPI
+#         fields = [ 'ticket_no','user', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
+#                    'Mgr_comment', 'request_raised_at']
+        
+
+
+#     def create(self, validated_data):
+#         request = self.context.get('request')
+#         user=request.user
+#         validated_data['user']=user
+#         print(user)
+#         ticket_no = "OJ-"+uuid.uuid4().hex[:6]
+#         validated_data['ticket_no'] = ticket_no
+        
+#         Severity = request.data.get('Severity')
+#         Severity = SeverityAPI.objects.get(severity=Severity)
+#         validated_data['Severity'] = Severity
+
+#         Report_To = request.data.get('Report_To')
+#         Report_To = ManagerAPI.objects.get(manager=Report_To)
+#         validated_data['Report_To'] = Report_To
+
+#         Type = request.data.get('Type')
+#         Type = TypeAPI.objects.get(type=Type)
+#         validated_data['Type'] = Type
+
+#         instance = self.Meta.model(**validated_data)
+#         instance.Severity = Severity
+#         instance.Report_To = Report_To
+#         instance.Type = Type
+#         instance.save()
+#         return instance
+    
+#     def update(self, instance, validated_data):
+        
+#         request = self.context.get('request')
+#         instance.user=request.data.get('user', instance.user)
+        
+#         if request.user.is_staff and request.user.is_superuser:
+#             instance.Admin_comment = validated_data['Admin_comment']
+            
+#         elif request.user.is_staff:
+#             instance.Mgr_comment = validated_data['Mgr_comment']
+            
+#         elif request.user.is_staff == False and request.user.is_superuser:
+#             instance.Mgr_comment = validated_data['Mgr_comment']
+        
 #         status = request.data.get('Status', instance.Status.status)
 #         instance.Status = StatusAPI.objects.get(status=status)
 #         instance.save()
-#
+        
 #         return instance
-
-
+            
+            
+            
+##########################################################################################################            
+        
 class TicketSerializer(serializers.ModelSerializer):
     Severity = serializers.CharField(source='Severity.severity', read_only=True)
     Report_To = serializers.CharField(source='Report_To.manager', read_only=True)
     Type = serializers.CharField(source='Type.type', read_only=True)
     Status = serializers.CharField(source='Status.status', read_only=True)
     ticket_no = serializers.CharField(required=False)
-    user=serializers.CharField()
+    
     
     class Meta:
         model = TicketAPI
-        fields = [ 'ticket_no','user', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
+        fields = [ 'id','ticket_no','user', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment',
                    'Mgr_comment', 'request_raised_at']
         
 
-
+    
     def create(self, validated_data):
+        print(validated_data,"validated data")
+        
         request = self.context.get('request')
-        user=request.user
-        validated_data['user']=user
+        print(request.user,"request")
+        
+        user = validated_data['user']
+        
+        print(validated_data['user'])
         ticket_no = "OJ-"+uuid.uuid4().hex[:6]
         validated_data['ticket_no'] = ticket_no
         
@@ -280,23 +322,40 @@ class TicketSerializer(serializers.ModelSerializer):
         validated_data['Type'] = Type
 
         instance = self.Meta.model(**validated_data)
+        instance.user=user
         instance.Severity = Severity
         instance.Report_To = Report_To
         instance.Type = Type
         instance.save()
-        print(instance)
         return instance
+    
+    
     def update(self, instance, validated_data):
+        # id=self.Meta.model.objects.get(id=instance.id)
+        # print(request.method)
         request = self.context.get('request')
         instance.user=request.data.get('user', instance.user)
-        if user.is_staff:
-            instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
-        elif user.is_superuser:
-            instance.Mgr_comment = request.data.get('Mgr_comment', instance.Mgr_comment)
-        elif user.is_superuser and user.is_staff:
-            instance.Admin_comment = request.data.get('Admin_comment', instance.Admin_comment)
+        # print(validated_data['Admin_comment'])
+        # if request.user.is_staff and request.user.is_superuser:
+        # print( validated_data['Admin_comment'],"----------")
+        # instance.Admin_comment = validated_data['Admin_comment']
+            # print(instance.Admin_comment,"--------------------------------")
+        if request.user.is_staff and request.user.is_superuser:
+            instance.Admin_comment = validated_data['Admin_comment'] 
+        elif request.user.is_staff:
+            instance.Mgr_comment = validated_data['Mgr_comment']
+            # print( validated_data['Mgr_comment'])
+        # print(validated_data['Mgr_comment'])
+        # instance.Mgr_comment = validated_data['Mgr_comment']
+        # print(instance.Mgr_comment)
+            
+        # elif request.user.is_staff == False and request.user.is_superuser:
+        #     instance.Mgr_comment = validated_data['Mgr_comment']
+        
         status = request.data.get('Status', instance.Status.status)
         instance.Status = StatusAPI.objects.get(status=status)
         instance.save()
-
-        return instance
+        
+        return instance    
+      
+   

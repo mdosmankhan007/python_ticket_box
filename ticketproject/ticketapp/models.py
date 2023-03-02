@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 # Create your models here.
 
 
-role=(('OILC_Manager','OILC_Manager'),('Deployed_Manager','Deployed_Manager'),('Employee','Employee'),('admin','admin'))
+role=(('Manager','Manager'),('Employee','Employee'),('admin','admin'))
 class Pusers(models.Model):
     username = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
@@ -14,6 +14,7 @@ class Pusers(models.Model):
     password = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
     role=models.CharField(max_length=100,choices=role)
+    phone_number=models.IntegerField(default=0)
     def __str__(self):
         return self.username
 
@@ -79,7 +80,7 @@ class ManagerAPI(models.Model):
 
 class TicketAPI(models.Model):
     ticket_no=models.CharField(max_length=20,unique=True)
-    user=models.CharField(max_length=30,default="")
+    user=models.CharField(max_length=30,default="",null=True)
     Subject=models.CharField(max_length=100)
     Severity=models.ForeignKey(SeverityAPI,on_delete=models.CASCADE)
     Type=models.ForeignKey(TypeAPI,on_delete=models.CASCADE)

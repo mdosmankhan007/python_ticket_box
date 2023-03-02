@@ -76,10 +76,10 @@ def reporting1(request):
     return render(request, 'manager.html', {'obj': obj})
 
 
-def reporting2(request):
-    obj = Ticket.objects.all()
-    print(obj)
-    return render(request, 'Manager2.html', {'obj': obj})
+# def reporting2(request):
+#     obj = Ticket.objects.all()
+#     print(obj)
+#     return render(request, 'Manager2.html', {'obj': obj})
 
 
 def ulogout(request):
@@ -126,7 +126,6 @@ def comment(request, model, id):
 
 
 def Mgrcomment(request, model, id):
-
     if model == 5:
         tmodel = Ticket.objects.get(id=id)
         fm = Mngr_comment(request.POST, instance=tmodel)
@@ -140,8 +139,6 @@ def Mgrcomment(request, model, id):
 
 
 def reject(request, model, id):
-    print(model)
-    print(id)
     if model == 5:
         tmodel = Ticket.objects.get(id=id)
         tmodel.Status = 'rejected'
@@ -162,7 +159,6 @@ def ticket(request):
     ticket1 = ticket[:6]
     if request.method == 'POST':
         fm = TicketForm(data=request.POST)
-        print(fm)
 
         if fm.is_valid():
             print(fm.cleaned_data)

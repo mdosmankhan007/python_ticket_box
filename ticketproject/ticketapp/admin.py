@@ -33,3 +33,6 @@ class UserAPIAdmin(admin.ModelAdmin):
 class TicketAPIAdmin(admin.ModelAdmin):
     list_display = ['id','ticket_no','Subject','Severity','Type','Report_To','Remarks','request_raised_at','Status','Admin_comment','Mgr_comment']
 
+@admin.register(RoleAPI)
+class RoleAPIAdmin(admin.ModelAdmin):
+    list_display = ['role']

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.crypto import get_random_string
-Roles=(('Employee','Employee'),('OILC_Manager','OILC_Manager'),('Deployed_Manager','Deployed_Manager'),('admin','admin'))
+Roles=(('Employee','Employee'),('Manager','Manager'),('admin','admin'))
 class SignUpForm(UserCreationForm):
     role= forms.ChoiceField(choices = Roles)
     class Meta:

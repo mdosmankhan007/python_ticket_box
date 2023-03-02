@@ -19,6 +19,7 @@ from rest_framework import routers
 from ticketapp import views
 from ticketapp import views_old
 from ticketapp.views import LoginAPI
+from ticketapp.serializers import *
 
 from rest_framework_simplejwt.views import(
     TokenObtainPairView,
@@ -38,6 +39,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include(router.urls)),
     path('api/login/',LoginAPI.as_view(actions={'post': 'post'})),
+    
+    path('api/tickets/<int:id>/', views.TicketsAPI.as_view({'patch': 'update'})),
+    # path('api/login/',LoginAPI.as_view()),
     path('api/logout/', views.LogoutView.as_view()),
 
     path("", views_old.home, name="homepage"),
@@ -46,7 +50,7 @@ urlpatterns = [
     # path("manager",views.manager,name='manager'),
     path("manager", views_old.reporting1, name='manager'),
     # path("reporting1", views.reporting1, name='reporting1'),
-    path("reporting2", views_old.reporting2, name='reporting2'),
+    # path("reporting2", views_old.reporting2, name='reporting2'),
     path("adminpage", views_old.admin, name='admin'),
     path('login/', views_old.user_login, name="logpage"),
 

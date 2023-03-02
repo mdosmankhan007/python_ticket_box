@@ -47,7 +47,7 @@
     <th>Report To</th>
     <th>time</th>
     <th>Remarks</th>
-    <th>Accept</th>
+    <th>Update Status</th>
     <th>Status</th>
     <th>Admin comment</th>
     <th>Manager Comment</th>
@@ -55,7 +55,7 @@
 
 </tr></thead>
 {% for i in obj %}
-    {% if i.Report_To == 'OILC_Manager' %}
+    {% comment %} {% if i.Report_To == 'OILC_Manager' %} {% endcomment %}
 <tr align="center">
     <td>{{i.ticket_no}}</td>
     <td>{{i.user}}</td>
@@ -73,7 +73,7 @@
     <td>{{i.Mgr_comment}}</td>
      <td><a href='Mcomment/5/{{i.id}}'>Add Comment</a></td>
 </tr>
-{% endif %}
+{% comment %} {% endif %} {% endcomment %}
 {% endfor %} 
 </table>
 </center>
