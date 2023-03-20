@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 import uuid
 import datetime
 from django.views.decorators.csrf import csrf_exempt
-
+'''user serializer'''
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.CharField()
     class Meta:
