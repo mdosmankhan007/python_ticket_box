@@ -32,7 +32,8 @@ class UserAPIAdmin(admin.ModelAdmin):
 @admin.register(TicketAPI)
 class TicketAPIAdmin(admin.ModelAdmin):
     list_display = ['id','ticket_no','Subject','Severity','Type','Report_To','Remarks','request_raised_at','Status','Admin_comment','Mgr_comment']
-
+'''This is for the role api'''
 @admin.register(RoleAPI)
 class RoleAPIAdmin(admin.ModelAdmin):
     list_display = ['role']
+    
