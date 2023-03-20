@@ -194,3 +194,49 @@ class TicketsAPI(viewsets.ModelViewSet):
     #     instance.save()
         
     #     return instance    
+    
+# class EmployeeView(viewsets.ModelViewSet):
+#         print(request.data)
+#         queryset=TicketAPI.objects.all()
+
+
+class EmployeeDetail(viewsets.ModelViewSet):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = TicketSerializer
+
+    def get_queryset(self):
+        print("innnnnnnn")
+        user = self.request.user
+        print(self.request,"rrrrrr")
+        print(user,"uuuuuuu")
+        
+        queryset = Ticket.objects.filter(user=user)
+        return queryset
+    # def create(self, validated_data):
+    #     request = self.context.get('request')
+    #     instance = self.serializer_class.Meta.model(**validated_data)
+    #     instance.user = request.user
+    #     instance.save()
+    #     return instance
+    # def update(self, instance, validated_data):
+    #     request = self.context.get('request')
+    #     order = self.serializer_class.Meta.model.objects.get(id=instance.id)
+    #     driver = Ticket.objects.get(name=request.user)
+    #     order.driver = driver
+    #     order.picked = validated_data['picked']
+    #     order.save()
+    #     return order
+@method_decorator(csrf_exempt, name='dispatch')
+class AdminComment(viewsets.ModelViewSet):
+    serializer_class=AdminCommentSerializer
+    queryset=TicketAPI.objects.all()
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [AllowAny]   
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ManagerComment(viewsets.ModelViewSet):
+    serializer_class=ManagerCommentSerializer
+    queryset=TicketAPI.objects.all()
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [AllowAny] 

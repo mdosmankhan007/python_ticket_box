@@ -302,7 +302,6 @@ class TicketSerializer(serializers.ModelSerializer):
         
         request = self.context.get('request')
         print(request.user,"request")
-        
         user = validated_data['user']
         
         print(validated_data['user'])
@@ -333,17 +332,31 @@ class TicketSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         # id=self.Meta.model.objects.get(id=instance.id)
         # print(request.method)
-        request = self.context.get('request')
-        instance.user=request.data.get('user', instance.user)
+        print(validated_data)
         # print(validated_data['Admin_comment'])
-        # if request.user.is_staff and request.user.is_superuser:
-        # print( validated_data['Admin_comment'],"----------")
+        
+        
+        request = self.context.get('request')
+        
+        status = request.data.get('Status', instance.Status.status)
+        instance.user=request.data.get('user', instance.user)
+        instance.Status = StatusAPI.objects.get(status=status)
+        
+        # instance.Admin_comment = validated_data['Admin_comment']
+        # print(validated_data['Admin_comment'])
+        
+        # print( validated_data['Admin_comment'])
         # instance.Admin_comment = validated_data['Admin_comment']
             # print(instance.Admin_comment,"--------------------------------")
-        if request.user.is_staff and request.user.is_superuser:
-            instance.Admin_comment = validated_data['Admin_comment'] 
-        elif request.user.is_staff:
-            instance.Mgr_comment = validated_data['Mgr_comment']
+        # if request.user.is_staff and request.user.is_superuser:
+            # print(instance.id)
+            # print(validated_data,"-----------------")
+            # print(validated_data['Admin_comment'],"aaaaaaaaaaaaaaa")
+        
+        # instance.Admin_comment = validated_data['Mgr_comment']
+        
+        # elif request.user.is_staff:
+        #     instance.Mgr_comment = validated_data['Mgr_comment']
             # print( validated_data['Mgr_comment'])
         # print(validated_data['Mgr_comment'])
         # instance.Mgr_comment = validated_data['Mgr_comment']
@@ -352,10 +365,25 @@ class TicketSerializer(serializers.ModelSerializer):
         # elif request.user.is_staff == False and request.user.is_superuser:
         #     instance.Mgr_comment = validated_data['Mgr_comment']
         
-        status = request.data.get('Status', instance.Status.status)
-        instance.Status = StatusAPI.objects.get(status=status)
+      
         instance.save()
         
         return instance    
-      
-   
+
+class AdminCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TicketAPI
+        fields = [ 'id','ticket_no','user', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment','Mgr_comment', 'request_raised_at']
+        def update(self, instance, validated_data):
+            request = self.context.get('request')
+            instance.Admin_comment = validated_data['Admin_comment']
+            instance.save()    
+
+class ManagerCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TicketAPI
+        fields = [ 'id','ticket_no','user', 'Subject', 'Severity', 'Type', 'Report_To', 'Remarks', 'Status', 'Admin_comment','Mgr_comment', 'request_raised_at']
+        def update(self, instance, validated_data):
+            request = self.context.get('request')
+            instance.Mgr_comment = validated_data['Mgr_comment']
+            instance.save() 

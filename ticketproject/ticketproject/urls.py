@@ -33,8 +33,9 @@ router.register('status',views.StatussAPI)
 router.register('manager',views.ManagersAPI)
 router.register('type',views.TypesAPI)
 router.register('ticket',views.TicketsAPI)
-
-# router.register('role',views.Role)
+router.register('empticket',views.EmployeeDetail,basename="Employee")
+router.register('admincomment',views.AdminComment)
+router.register('managercomment',views.ManagerComment)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include(router.urls)),
