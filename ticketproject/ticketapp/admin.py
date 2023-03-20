@@ -8,7 +8,7 @@ class TicketAdmin(admin.ModelAdmin):
 @admin.register(Pusers)
 class PuserAdmin(admin.ModelAdmin):
     list_display = ['username','first_name','last_name','role','email']
-
+'''User API'''
 @admin.register(UsersAPI)
 class UserAPIAdmin(admin.ModelAdmin):
     list_display = ['username','first_name','last_name','role','email']
